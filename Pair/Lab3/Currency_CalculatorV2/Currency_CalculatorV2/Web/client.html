@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>kalkulators</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+ $(document).ready(function () {
+ $(":button").click(function (event) {
+ var value1 = $("#txtValue1").val();
+ var arg = "value1=" + value1;
+ var control = event.target || event.srcElement;
+ var id = control.id
+ var urlString = "/api/Przelicznik/";
+ switch (id) {
+ case 'btnPlnToUsd':
+ urlString = "/api/Przelicznik/" + "PlnToUsd/?value1=" + value1;
+ break;
+ case 'btnUsdToPln':
+ urlString = "/api/Przelicznik/" + "UsdToPln/?value1=" + value1;
+ break;
+ case 'btnPlnToGbp':
+ urlString = "/api/Przelicznik/" + "PlnToGbp/?value1=" + value1;
+ break;
+ case 'btnGbpToPln':
+ urlString = "/api/Przelicznik/" + "GbpToPln/?value1=" + value1;
+ break;
+ default:
+ urlString = urlString + "hello";
+ }
+ $.ajax({
+ url: urlString,
+ type: "GET",
+ dataType: 'json',
+ success: function (result) {
+ $("#txtResult").val(result);
+ },
+ error: function (xhr, status, error) {
+ var err = eval("(" + xhr.responseText + ")");
+ $("#txtResult").val(err.Message)
+ }
+ });
+ });
+ });
+    </script>
+</head>
+<body>
+    <div style="text-align:center">
+        <h2>Przelicznik walut</h2>
+        <div class="form-group">
+            <label for="txtValue1">Wpisz liczbę:</label>
+            <input type="number" id="txtValue1" min="0"
+                   max="100000">
+            <label for="txtValue1">Wynik:</label>
+            <input type="text" id="txtResult" disabled />
+        </div>
+        <input type="button" value="PlnToUsd" id="btnPlnToUsd">
+        <input type="button" value="UsdToPln" id="btnUsdToPln">
+        <input type="button" value="PlnToGbp" id="btnPlnToGbp">
+        <input type="button" value="GbpToPln" id="btnGbpToPln">
+    </div>
+</body>
+</html>
